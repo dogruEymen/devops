@@ -2,7 +2,7 @@ projects:
   JAVA1:
     name: "java-project-1"
     codeRepo:
-      url: "git@github.com:dogruEymen/java-project-1.git"
+      url: "https://github.com/dogruEymen/java-project-1.git"
       credentialsId: "java-project-1-credentials"
   JAVA2:
     codeRepo:
