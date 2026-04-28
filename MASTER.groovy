@@ -2,6 +2,8 @@ node {
 
     currentBuild.getChangeSets().clear()
 
+    checkout scm
+
     String BUILD_TEST_STAGE = "Build & Test"
     String SONARQUBE_STAGE = "SonarQube Check Stage"
     String VERSION_STAGE = "Version Bump"
