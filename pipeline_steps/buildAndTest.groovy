@@ -22,12 +22,11 @@ node {
         
         String buildDir = "build"
         dir(buildDir){
-            checkout([$class: 'GitSCM'], 
-            branches: [[name: '*/main']],
-            userRemoteConfigs: [[
-                url: projectCodeRepoUrl,
-                credentialsId: codeRepoCredentialsId
-            ]])
+            checkout(
+            scm: [$class: 'GitSCM', 
+                  branches: [[name: '*/main']],
+                  userRemoteConfigs: [[ url: projectCodeRepoUrl, credentialsId: codeRepoCredentialsId]]
+                  ])
 
             buildMaven()
         }
@@ -39,14 +38,11 @@ node {
     stage (TEST_STAGE) {
         String testDir = "test"
         dir(testDir){
-            checkout([
-                $class: 'GitSCM',
-                branches: [[name: '*/main']],
-                userRemoteConfigs: [[
-                    url: projectCodeRepoUrl,
-                    credentialsId: codeRepoCredentialsId
-                ]]
-            ])
+            checkout(
+            scm: [$class: 'GitSCM', 
+                  branches: [[name: '*/main']],
+                  userRemoteConfigs: [[ url: projectCodeRepoUrl, credentialsId: codeRepoCredentialsId]]
+                  ])
 
             testMaven()
         }
