@@ -62,10 +62,13 @@ node {
 
         stage(SONAR_CHECK) {
 
-            withSonarQubeEnv('sonarQube') {
+            dir(buildDir){
 
-                sh 'mvn sonar:sonar'
+                withSonarQubeEnv('sonarQube') {
 
+                    sh 'mvn sonar:sonar'
+
+                }
             }
 
         }
