@@ -18,7 +18,7 @@ node {
     String BUILD_STAGE = 'Build'
     String TEST_STAGE = 'Test'
  
-    stage (BUILD_STAGE) {
+    stage(BUILD_STAGE) {
         
         String buildDir = "build"
         dir(buildDir){
@@ -35,7 +35,7 @@ node {
         
     }
 
-    stage (TEST_STAGE) {
+    stage(TEST_STAGE) {
         String testDir = "test"
         dir(testDir){
             checkout(
@@ -46,9 +46,29 @@ node {
 
             testMaven()
         }
-
         
     }
+
+    stage(SONARQUBE_STAGE) {
+
+        withSonarQubeEnv('sonarQube') {
+
+            sh 'mvn sonar:sonar'
+
+        }
+
+    }
+
+    stage(QUALITY_GATE_CHECK_STAGE) {
+            
+        timeout(time: 1, unit: 'HOURS') {
+
+            waitForQualityGate abortPipeline: true  
+
+        }
+        
+    }
+
 }
 
 def buildMaven(){

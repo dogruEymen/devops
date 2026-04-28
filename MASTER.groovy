@@ -28,11 +28,16 @@ node {
 
     try {
 
-        build job: 'maven-build-job', wait: true, propagate: true,
-        parameters: [
-            string(name: 'CODE_URL', value: projectCodeRepoUrl),
-            string(name: 'CREDENTIALS_ID', value: projectCredentialsId)
-        ]
+        stage(BUILD_TEST_STAGE) {
+
+            build job: 'maven-build-job', wait: true, propagate: true,
+            parameters: [
+                string(name: 'CODE_URL', value: projectCodeRepoUrl),
+                string(name: 'CREDENTIALS_ID', value: projectCredentialsId)
+            ]
+
+        }
+
 
     } catch(Exception e) {
 
