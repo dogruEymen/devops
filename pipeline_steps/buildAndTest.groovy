@@ -1,3 +1,10 @@
+properties([
+    parameters([
+        string(name: 'CODE_URL', defaultValue: '', description: 'Repository URL'),
+        string(name: 'CREDENTIALS_ID', defaultValue: '', description: 'Git Credentials')
+    ])
+])
+
 node {
 
     deleteDir()
@@ -22,9 +29,11 @@ node {
                 url: projectCodeRepoUrl,
                 credentialsId: codeRepoCredentialsId
             ]])
+
+            buildMaven()
         }
 
-        buildMaven()
+        
         
     }
 
@@ -37,9 +46,11 @@ node {
                 url: projectCodeRepoUrl,
                 credentialsId: codeRepoCredentialsId
             ]])
+
+            testMaven()
         }
 
-        testMaven()
+        
     }
 }
 

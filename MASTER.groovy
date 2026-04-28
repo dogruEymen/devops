@@ -28,7 +28,7 @@ node {
 
     try {
 
-        build job: 'maven-build-job', wait: true, propagate: false,
+        build job: 'maven-build-job', wait: true, propagate: true,
         parameters: [
             string(name: 'CODE_URL', value: projectCodeRepoUrl),
             string(name: 'CREDENTIALS_ID', value: projectCredentialsId)
