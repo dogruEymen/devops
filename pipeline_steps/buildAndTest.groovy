@@ -7,93 +7,79 @@ properties([
 
 node {
 
-    deleteDir()
+    String mavenHome = tool 'maven_3.9'
 
-    // Build edilecek dosyalara ihtiyacım var
-    // Build edilecek ortama ve tool'lara ihtiyacım var
-    // Test için gerekli tool'lara ihtiyacım var
-    String projectCodeRepoUrl = params.CODE_URL
-    String codeRepoCredentialsId = params.CREDENTIALS_ID
-
-    String BUILD_STAGE = 'Build'
-    String TEST_STAGE = 'Test'
-    String SONAR_CHECK = "Code Quality Check with SonarQube"
-    String QUALITY_GATE_CHECK_STAGE = "Quality Gate Check"
-    
-    stage(BUILD_STAGE) {
+    withEnv(["PATH+MAVEN=${mavenHome}/bin"]){
         
+        deleteDir()
+
+        // Build edilecek dosyalara ihtiyacım var
+        // Build edilecek ortama ve tool'lara ihtiyacım var
+        // Test için gerekli tool'lara ihtiyacım var
+        String projectCodeRepoUrl = params.CODE_URL
+        String codeRepoCredentialsId = params.CREDENTIALS_ID
         String buildDir = "build"
-        dir(buildDir){
-            checkout(
-            scm: [$class: 'GitSCM', 
-                  branches: [[name: '*/main']],
-                  userRemoteConfigs: [[ url: projectCodeRepoUrl, credentialsId: codeRepoCredentialsId]]
-                  ])
 
-            buildMaven()
-        }
+        String BUILD_STAGE = 'Build'
+        String TEST_STAGE = 'Test'
+        String SONAR_CHECK = "Code Quality Check with SonarQube"
+        String QUALITY_GATE_CHECK_STAGE = "Quality Gate Check"
 
-        
-        
-    }
 
-    stage(TEST_STAGE) {
-        String testDir = "test"
-        dir(testDir){
-            checkout(
-            scm: [$class: 'GitSCM', 
-                  branches: [[name: '*/main']],
-                  userRemoteConfigs: [[ url: projectCodeRepoUrl, credentialsId: codeRepoCredentialsId]]
-                  ])
+        stage('Checkout') {
 
-            testMaven()
-        }
-        
-    }
-
-    stage(SONAR_CHECK) {
-
-        withSonarQubeEnv('sonarQube') {
-
-            sh 'mvn sonar:sonar'
+            dir(buildDir) {
+                checkout(scm: [
+                    $class: 'GitSCM', 
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[ url: projectCodeRepoUrl, credentialsId: codeRepoCredentialsId]]
+                ])
+            }
 
         }
 
-    }
-
-    stage(QUALITY_GATE_CHECK_STAGE) {
+        stage(BUILD_STAGE) {
             
-        timeout(time: 1, unit: 'HOURS') {
+            dir(buildDir){
 
-            waitForQualityGate abortPipeline: true  
+                echo 'Building project...'
+                sh 'mvn clean package -DskipTests'
+
+            }
+            
+        }
+
+        stage(TEST_STAGE) {
+            
+            dir(buildDir){
+    
+                echo 'Testing project...'
+                sh 'mvn test'
+
+            }
+            
+        }
+
+        stage(SONAR_CHECK) {
+
+            withSonarQubeEnv('sonarQube') {
+
+                sh 'mvn sonar:sonar'
+
+            }
+
+        }
+
+        stage(QUALITY_GATE_CHECK_STAGE) {
+                
+            timeout(time: 1, unit: 'HOURS') {
+
+                waitForQualityGate abortPipeline: true  
+
+            }
 
         }
 
     }
 
-}
-
-def buildMaven(){
-
-    echo 'Build maven running...'
-
-    String mavenPath = tool 'maven_3.9'
-    String mavenBuildPath = "PATH+MAVEN=$mavenPath/bin"
-
-    withEnv([mavenBuildPath]){
-        sh 'mvn clean package'
-    }
-
-}
-
-def testMaven(){
-
-    echo 'Test maven running...'
-
-    String mavenPath = tool 'maven_3.9'
-    String mavenBuildPath = "PATH+MAVEN=$mavenPath/bin"
-
-    withEnv([mavenBuildPath]){
-        sh 'mvn test'
-    }
 }
