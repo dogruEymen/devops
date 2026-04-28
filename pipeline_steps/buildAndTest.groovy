@@ -18,7 +18,6 @@ node {
     String BUILD_STAGE = 'Build'
     String TEST_STAGE = 'Test'
  
-
     stage (BUILD_STAGE) {
         
         String buildDir = "build"
@@ -40,12 +39,14 @@ node {
     stage (TEST_STAGE) {
         String testDir = "test"
         dir(testDir){
-            checkout([$class: 'GitSCM'], 
-            branches: [[name: '*/main']],
-            userRemoteConfigs: [[
-                url: projectCodeRepoUrl,
-                credentialsId: codeRepoCredentialsId
-            ]])
+            checkout([
+                $class: 'GitSCM',
+                branches: [[name: '*/main']],
+                userRemoteConfigs: [[
+                    url: projectCodeRepoUrl,
+                    credentialsId: codeRepoCredentialsId
+                ]]
+            ])
 
             testMaven()
         }
