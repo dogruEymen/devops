@@ -1,7 +1,13 @@
+properties([
+    parameters([
+        string(name: 'PROJECT_ID', defaultValue: '', description: 'Lütfen projeyi seçiniz (YML dosyasındaki anahtar)')
+    ])
+])
+
 node {
 
     currentBuild.getChangeSets().clear()
-
+    
     checkout scm
 
     String BUILD_TEST_STAGE = "Build & Test"
