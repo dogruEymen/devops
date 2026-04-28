@@ -17,7 +17,9 @@ node {
 
     String BUILD_STAGE = 'Build'
     String TEST_STAGE = 'Test'
- 
+    String SONAR_CHECK = "Code Quality Check with SonarQube"
+    String QUALITY_GATE_CHECK_STAGE = "Quality Gate Check"
+    
     stage(BUILD_STAGE) {
         
         String buildDir = "build"
@@ -49,7 +51,7 @@ node {
         
     }
 
-    stage(SONARQUBE_STAGE) {
+    stage(SONAR_CHECK) {
 
         withSonarQubeEnv('sonarQube') {
 
@@ -66,7 +68,7 @@ node {
             waitForQualityGate abortPipeline: true  
 
         }
-        
+
     }
 
 }
