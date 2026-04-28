@@ -1,0 +1,10 @@
+projects:
+  JAVA1:
+    codeRepo:
+      url: https://github.com/dogruEymen/java-project-1.git
+  JAVA2:
+    codeRepo:
+      url: https://github.com/dogruEymen/java-project-2.git
+  JAVA3:
+    codeRepo:
+      url: https://github.com/dogruEymen/java-project-3.git
