@@ -71,9 +71,8 @@ node {
 
                             docker run --rm \
                             --network devops_sonarnet \
-                            -v "$PWD":/workspace \
+                            -v "$PWD":./ \
                             -v maven_repo:/root/.m2 \
-                            -w /workspace \
                             "$BUILDER_IMAGE" \
                             ls -la
                         '''
