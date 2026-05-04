@@ -44,7 +44,8 @@ node {
                 string(name: 'CODE_URL', value: projectCodeRepoUrl),
                 string(name: 'CREDENTIALS_ID', value: projectCredentialsId),
                 string(name: 'PROJECT_NAME', value: projectName),
-                string(name: 'BUILDER_IMAGE', value: projectBuildImage)
+                string(name: 'BUILDER_IMAGE', value: projectBuildImage),
+                string(name: 'RUNNER_IMAGE', value: projectRunnerImage)
             ]
 
         }
