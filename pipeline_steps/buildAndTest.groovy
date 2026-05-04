@@ -66,17 +66,11 @@ node {
                 ]) {
                     withEnv(["BUILDER_IMAGE=${builderImage}"]) {
                         sh '''
-                            pwd
-                            ls -la
-
-                            docker run --rm \
-                            --network devops_sonarnet \
-                            --volumes-from jenkins-v3 \
+                            docker run -it --rm \
                             -v "$PWD":/workspace \
-                            -v maven_repo:/root/.m2 \
                             -w /workspace \
                             "$BUILDER_IMAGE" \
-                            ls -la \
+                            bash
                         '''
                     }
 
