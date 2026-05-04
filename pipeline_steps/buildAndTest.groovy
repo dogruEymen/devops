@@ -2,7 +2,9 @@ properties([
     parameters([
         string(name: 'CODE_URL', defaultValue: '', description: 'Repository URL'),
         string(name: 'CREDENTIALS_ID', defaultValue: '', description: 'Git Credentials'),
-        string(name: 'PROJECT_NAME', defaultValue: '', description: 'Name of project')
+        string(name: 'PROJECT_NAME', defaultValue: '', description: 'Name of project'),
+        string(name: 'BUILDER_IMAGE', defaultValue: '', description: 'Env for build the project'),
+        string(name: 'RUNNER_IMAGE', defaultValue: '', description: 'Env for Run the project')
     ])
 ])
 
@@ -14,7 +16,9 @@ node {
     String projectCodeRepoUrl = params.CODE_URL
     String codeRepoCredentialsId = params.CREDENTIALS_ID
     String projectName = params.PROJECT_NAME
-    
+    String builderImage = params.BUILDER_IMAGE
+    String runnerImage = params.RUNNER_IMAGE
+
     String buildDir = "build"
     String imageName = "$projectName:${env.BUILD_NUMBER}"
     
@@ -44,7 +48,7 @@ node {
 
             echo 'Building project...'
             // Yalnızca build sonucu oluşan dosyaları alıyoruz
-            sh 'docker build --target artifacts --output type=local,dest=./out .'
+            sh 'docker build --target artifacts --output type=local,dest=./target .'
             // Oluşan image dosyasını alıyoruz
             sh "docker build --target runner -t ${projectName}:${env.BUILD_NUMBER} ."
 
@@ -52,14 +56,27 @@ node {
         
     }
 
-
     stage(SONAR_CHECK) {
 
         dir(buildDir){
 
             withSonarQubeEnv('sonarQube') {
-
-                sh 'mvn sonar:sonar'
+                withCredentials([
+                    string(credentialsId: 'sonarQube', variable: 'SONAR_AUTH_TOKEN')
+                ]) {
+                    sh '''
+                        docker run --rm \
+                        --network devops_sonarnet \
+                        -v "$PWD":/workspace \
+                        -v maven_repo:/root/.m2 \
+                        -w /workspace \
+                        ${builderImage} \
+                        mvn sonar:sonar \
+                        -Dsonar.host.url=http://sonarqube_app:9000 \
+                        -Dsonar.token=\$SONAR_AUTH_TOKEN
+                    '''
+                }
+                
 
             }
         }

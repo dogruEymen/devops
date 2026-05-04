@@ -32,7 +32,8 @@ node {
     String projectName = project['name']
     String projectCodeRepoUrl = project['codeRepo']['url']
     String projectCredentialsId = project['codeRepo']['credentialsId']
-
+    String projectBuildImage = project['images']['builderImage']
+    String projectRunnerImage = project['images']['runnerImage']
 
     try {
 
@@ -47,6 +48,7 @@ node {
 
         }
 
+    
 
     } catch(Exception e) {
 
