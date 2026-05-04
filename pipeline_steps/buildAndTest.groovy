@@ -13,8 +13,9 @@ node {
     // Test için gerekli tool'lara ihtiyacım var
     String projectCodeRepoUrl = params.CODE_URL
     String codeRepoCredentialsId = params.CREDENTIALS_ID
+    String projectName = params.PROJECT_NAME
     String buildDir = "build"
-    String imageName = "$PROJECT_NAME:${env.BUILD_NUMBER}"
+    String imageName = "$projectName:${env.BUILD_NUMBER}"
     
     String BUILD_STAGE = "Build & Test Inside Docker"
     String TEST_STAGE = "Test"
