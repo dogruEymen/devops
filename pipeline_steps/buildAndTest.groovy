@@ -45,7 +45,7 @@ node {
             // Yalnızca build sonucu oluşan dosyaları alıyoruz
             sh 'docker build --target artifacts --output type=local,dest=./out .'
             // Oluşan image dosyasını alıyoruz
-            sh 'docker build --target runner -t ${PROJECT_ID}:${env.BUILD_NUMBER} .'
+            sh "docker build --target runner -t ${PROJECT_ID}:${env.BUILD_NUMBER} ."
 
         }
         
