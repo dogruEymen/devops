@@ -76,7 +76,7 @@ node {
                             -v maven_repo:/root/.m2 \
                             -w /workspace \
                             "$BUILDER_IMAGE" \
-                            
+                            ls -la \
                         '''
                     }
 
