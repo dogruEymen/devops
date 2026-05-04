@@ -14,6 +14,7 @@ node {
     String projectCodeRepoUrl = params.CODE_URL
     String codeRepoCredentialsId = params.CREDENTIALS_ID
     String projectName = params.PROJECT_NAME
+    
     String buildDir = "build"
     String imageName = "$projectName:${env.BUILD_NUMBER}"
     
@@ -45,7 +46,7 @@ node {
             // Yalnızca build sonucu oluşan dosyaları alıyoruz
             sh 'docker build --target artifacts --output type=local,dest=./out .'
             // Oluşan image dosyasını alıyoruz
-            sh "docker build --target runner -t ${PROJECT_ID}:${env.BUILD_NUMBER} ."
+            sh "docker build --target runner -t ${projectName}:${env.BUILD_NUMBER} ."
 
         }
         
