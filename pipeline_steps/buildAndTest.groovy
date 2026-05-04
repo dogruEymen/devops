@@ -70,7 +70,7 @@ node {
                         sh '''
                             docker run --rm \
                             --network devops_sonarnet \
-                            -v "$PWD":/workspace \
+                            -v "${workDirPath}/build":/workspace \
                             -w /workspace \
                             "$BUILDER_IMAGE" \
                             mvn sonar:sonar \
