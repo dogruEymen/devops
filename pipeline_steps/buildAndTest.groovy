@@ -1,7 +1,7 @@
 properties([
     parameters([
         string(name: 'CODE_URL', defaultValue: '', description: 'Repository URL'),
-        string(name: 'CREDENTIALS_ID', defaultValue: '', description: 'Git Credentials')
+        string(name: 'CREDENTIALS_ID', defaultValue: '', description: 'Git Credentials'),
         string(name: 'PROJECT_NAME', defaultValue: '', description: 'Name of project')
     ])
 ])
