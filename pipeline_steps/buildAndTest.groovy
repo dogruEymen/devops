@@ -71,7 +71,7 @@ node {
                             -v "$PWD":/workspace \
                             -v maven_repo:/root/.m2 \
                             -w /workspace \
-                            $builderImage" \
+                            "$BUILDER_IMAGE" \
                             mvn sonar:sonar \
                             -Dsonar.host.url=http://sonarqube_app:9000 \
                             -Dsonar.token="$SONAR_AUTH_TOKEN"
