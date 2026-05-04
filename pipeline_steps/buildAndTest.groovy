@@ -64,21 +64,17 @@ node {
                 withCredentials([
                     string(credentialsId: 'sonarQube', variable: 'SONAR_AUTH_TOKEN')
                 ]) {
-
                     sh '''
                         docker run --rm \
                         --network devops_sonarnet \
                         -v "$PWD":/workspace \
                         -v maven_repo:/root/.m2 \
                         -w /workspace \
-                        "$builderImage" \
+                        $builderImage" \
                         mvn sonar:sonar \
                         -Dsonar.host.url=http://sonarqube_app:9000 \
                         -Dsonar.token="$SONAR_AUTH_TOKEN"
                     '''
-
-                    }
-                    
                 }
                 
 
