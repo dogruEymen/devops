@@ -24,13 +24,15 @@ node {
     String projectsFilePath = "./projects.yml"
     
     def projects = readYaml(file: projectsFilePath)['projects']
+    if(!projects.projects.containKey(PROJECT_ID)){
+        error "HATA: ${PROJECT_ID} couldn't found in YAML file!"
+    }
+
     def project = projects[PROJECT_ID]
     String projectName = project['name']
     String projectCodeRepoUrl = project['codeRepo']['url']
     String projectCredentialsId = project['codeRepo']['credentialsId']
 
-
-    deleteDir()
 
     try {
 
@@ -39,7 +41,8 @@ node {
             build job: 'maven-build-job', wait: true, propagate: true,
             parameters: [
                 string(name: 'CODE_URL', value: projectCodeRepoUrl),
-                string(name: 'CREDENTIALS_ID', value: projectCredentialsId)
+                string(name: 'CREDENTIALS_ID', value: projectCredentialsId),
+                string(name: 'PROJECT_NAME', value: projectName)
             ]
 
         }
