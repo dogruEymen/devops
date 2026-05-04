@@ -66,6 +66,9 @@ node {
                 ]) {
                     withEnv(["BUILDER_IMAGE=${builderImage}"]) {
                         sh '''
+                            pwd
+                            ls -la
+                            
                             docker run --rm \
                             --network devops_sonarnet \
                             -v "$PWD":/workspace \
