@@ -71,10 +71,12 @@ node {
 
                             docker run --rm \
                             --network devops_sonarnet \
-                            -v "$PWD":./ \
+                            --volumes-from jenkins-v3 \
+                            -v "$PWD":/workspace \
                             -v maven_repo:/root/.m2 \
+                            -w /workspace \
                             "$BUILDER_IMAGE" \
-                            ls -la
+                            
                         '''
                     }
 
