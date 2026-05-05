@@ -73,6 +73,8 @@ node {
                             -v "${workDirPath}/build":/workspace \
                             -w /workspace \
                             "$BUILDER_IMAGE" \
+                            pwd \
+                            ls \
                             mvn sonar:sonar \
                                 -Dsonar.host.url=http://sonarqube_app:9000 \
                                 -Dsonar.token="$SONAR_AUTH_TOKEN"
