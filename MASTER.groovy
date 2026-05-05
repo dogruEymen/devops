@@ -1,6 +1,7 @@
 properties([
     parameters([
-        string(name: 'PROJECT_ID', defaultValue: '', description: 'Lütfen projeyi seçiniz (YML dosyasındaki anahtar)')
+        string(name: 'PROJECT_ID', defaultValue: '', description: 'Lütfen projeyi seçiniz (YML dosyasındaki anahtar)'),
+        string(name: 'BRANCH_NAME', defaultValue: 'main')
     ])
 ])
 
@@ -17,15 +18,14 @@ node {
     String BUILD_TEST_STAGE = "Build & Test"
     String SONARQUBE_STAGE = "SonarQube Check Stage"
     String VERSION_STAGE = "Version Bump"
-    String DOCKER_STAGE = "Docker Build & Tag"
-    String GHCR_PUSH_STAGE = "GHCR Push"
+    String DOCKER_STAGE = "Docker Build, Tag & Push"
+    
 
     // Jobs
     String BUILD_TEST_JOB = "maven-build-job"
     String SONARQUBE_JOB = "sonarqube-check-job"
     String VERSION_JOB = "version-bump-job"
-    String DOCKER_JOB = "docker-build-tag-job"
-    String GHCR_PUSH_JOB = "ghcr-push-job"
+    String DOCKER_BUILD_PUSH_JOB = "docker-build-push-job"
 
     /*stage("Resolve Github Event") {
         if(!params.GITHUB_PAYLOAD?.trim()) {
@@ -43,6 +43,8 @@ node {
     // Jenkins Parameters
     String PROJECT_ID = params.PROJECT_ID
     println("PROJECT_ID: $PROJECT_ID")
+    String BRANCH_NAME = params.BRANCH_NAME
+    println("BRANCH_NAME: $BRANCH_NAME")
 
     // Paths
     String projectsFilePath = "./projects.yml"
@@ -93,6 +95,21 @@ node {
             ]
 
             runDownstreamJob(VERSION_JOB, parameters)
+        }
+
+        stage(DOCKER_STAGE) {
+
+            def parameters = [
+                string(name: 'CODE_URL', value: projectCodeRepoUrl),
+                string(name: 'BRANCH_NAME', value: BRANCH_NAME),
+                string(name: 'CREDENTIALS_ID', value: projectCredentialsId),
+                string(name: 'REPO_SLUG', value: ),
+                string(name: 'BUILD_IMAGE', value: projectBuildImage),
+                string(name: 'RUNNER_IMAGE', value: projectRunnerImage),
+                string(name: 'PROJECT_NAME', value: projectName)
+            ]
+
+            runDownstreamJob(DOCKER_BUILD_PUSH_JOB, parameters)
         }
 
     } catch(Exception e) {
