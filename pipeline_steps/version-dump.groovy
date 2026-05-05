@@ -14,7 +14,7 @@ properties([
     String CURRENT_VER_STAGE = 'Read Current Version from pom.xml file'
     String NEW_VERSION = 'Calculate New Version'
     String COMMIT_VERSION = 'Commit Version Change'
-
+    String UPDATE_VERSION = 'Update Version and write on pom.xml file'
 node {
 
     
@@ -110,7 +110,7 @@ String versionDumpPatch(String currentVersion) {
     if(tokenizedVer.size() != 3) {
         error "Invalid version format: ${currentVersion} Expected: major.minor.patch" 
     }
-    
+
     return updatedVer
 
 }
