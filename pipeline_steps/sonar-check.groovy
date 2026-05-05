@@ -1,6 +1,6 @@
 properties([
     parameters([
-        string(name: 'REPO_URL', defaultValue: ''),
+        string(name: 'CODE_URL', defaultValue: ''),
         string(name: 'CREDENTIALS_ID', defaultValue: ''),
         string(name: 'PROJECT_NAME', defaultValue: '')
     ])
@@ -18,7 +18,7 @@ node {
 
     // parameters
     String projectName = params.PROJECT_NAME
-    String projectCodeRepoUrl = params.REPO_URL
+    String projectCodeRepoUrl = params.CODE_URL
     String projectCredentialsId = params.CREDENTIALS_ID
 
     
@@ -55,7 +55,7 @@ node {
     stage(SONAR_CHECK) {
 
         timeout(time: 5, unit: "MINUTES") {
-            
+
             def qualityGate = waitForQualityGate()
             if(qualityGate.status != "OK") {
                 error "SonarQube Quality Gate failed. Status : ${qualityGate.status}"

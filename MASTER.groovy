@@ -18,7 +18,7 @@ node {
     String GHCR_PUSH_STAGE = "GHCR Push"
 
     // Jobs
-    String BUILD_TEST_JOB = "build-test-job"
+    String BUILD_TEST_JOB = "maven-build-job"
     String SONARQUBE_JOB = "sonarqube-check-job"
     String VERSION_JOB = "version-bump-job"
     String DOCKER_JOB = "docker-build-tag-job"
@@ -48,14 +48,14 @@ node {
 
         stage(BUILD_TEST_STAGE) {
 
-            def parameters: [
+            def parameters = [
                 string(name: 'CODE_URL', value: projectCodeRepoUrl),
                 string(name: 'CREDENTIALS_ID', value: projectCredentialsId),
                 string(name: 'PROJECT_NAME', value: projectName),
                 string(name: 'BUILDER_IMAGE', value: projectBuildImage)
             ]
 
-            runDownstreamJob('maven-build-job', parameters)
+            runDownstreamJob(BUILD_TEST_JOB, parameters)
         }
 
         stage(SONARQUBE_STAGE) {
