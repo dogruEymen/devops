@@ -68,8 +68,8 @@ node {
                 -v maven_repo:/root/.m2 \\
                 -w \${WORKSPACE} \\
                 ${builderImage} \\
-                mvn version:set -DnewVersion=${env.NEW_VERSION}
-                mvn version:commit"""
+                mvn version:set -DnewVersion=${env.NEW_VERSION} \\
+                mvn versions:commit"""
         )
 
     }
@@ -88,7 +88,7 @@ node {
                 git config user.email "jenkins@local"
                 
                 git add pom.xml
-                git commit -m "bump version to ${env.NEW_VERSION} || echo "No version changes to commit"
+                git commit -m "bump version to ${env.NEW_VERSION}" || echo "No version changes to commit"
 
                 git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@${codeRepoUrl.replace("https://", "")}
                 git push origin HEAD:main
