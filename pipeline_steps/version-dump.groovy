@@ -11,12 +11,16 @@ properties([
     String credentialsId = params.CREDENTIALS_ID
     String builderImage = params.BUILDER_IMAGE
 
-    String CURRENT_VER_STAGE = 'Obtaining Current Version from pom.xml file'
+    String CURRENT_VER_STAGE = 'Read Current Version from pom.xml file'
+    String NEW_VERSION = 'Calculate New Version'
+    String COMMIT_VERSION = 'Commit Version Change'
 
 node {
 
     
     stage('Checkout') {
+        
+        cleanWs()
 
         checkout(scm: [
             $class: 'GitSCM',
@@ -42,8 +46,67 @@ node {
         echo "Current Version: ${currentVer}"
 
         env.CURRENT_VER = currentVer
+
+    }
+
+    stage(NEW_VERSION) {
+
+        String currentVer = env.CURRENT_VER
+
+        env.NEW_VERSION = versionDumpPatch(currentVer)
+
+        echo "New Version: ${env.NEW_VERSION}"
+    
+    }
+
+    stage(UPDATE_VERSION) {
+
+        sh(
+            script: """
+                docker run --rm \\
+                -v jenkins_home:/var/jenkins_home \\
+                -v maven_repo:/root/.m2 \\
+                -w \${WORKSPACE} \\
+                ${builderImage} \\
+                mvn version:set -DnewVersion=${env.NEW_VERSION}
+                mvn version:commit"""
+        )
+
+    }
+
+    stage(COMMIT_VERSION) {
+        
+        withCredentials([
+            usernamePassword(
+                credentialsId: ,
+                usernameVariable: "GIT_USERNAME",
+                passwordVariable: "GIT_PASSWORD",
+            )
+        ]) {
+            sh """
+                git config user.name "jenkins"
+                git config user.email "jenkins@local"
+                
+                git add pom.xml
+                git commit -m "chore: bump version to ${env.NEW_VERSION} || echo "No version changes to commit"
+
+                git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@${codeRepoUrl.replace("https://", "")}
+                git push origin HEAD:main
+                """
+        }
     }
 
 
+
+}
+
+String versionDumpPatch(String currentVersion) {
+    
+    String cleanedVersion = currentVersion.replace("-SNAPSHOT", "")
+    def tokenizedVer = cleanedVersion.tokenize(".")
+    String updatedVer = tokenizedVer[0] + "." + tokenizedVer[1] + "."
+    updatedVer = updatedVer + (tokenizedVer[2].toInteger() + 1).toString()
+
+    return updatedVer
 
 }
