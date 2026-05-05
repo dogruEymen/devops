@@ -107,6 +107,10 @@ String versionDumpPatch(String currentVersion) {
     String updatedVer = tokenizedVer[0] + "." + tokenizedVer[1] + "."
     updatedVer = updatedVer + (tokenizedVer[2].toInteger() + 1).toString()
 
+    if(tokenizedVer.size() != 3) {
+        error "Invalid version format: ${currentVersion} Expected: major.minor.patch" 
+    }
+    
     return updatedVer
 
 }
