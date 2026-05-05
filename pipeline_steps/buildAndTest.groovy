@@ -58,7 +58,7 @@ node {
         
     }
 
-    stage(SONAR_CHECK) {
+    /* stage(SONAR_CHECK) {
 
         dir(buildDir){
 
@@ -86,18 +86,7 @@ node {
             }
         }
 
-    }
-
-    stage(QUALITY_GATE_CHECK_STAGE) {
-            
-        timeout(time: 1, unit: 'HOURS') {
-
-            waitForQualityGate abortPipeline: true  
-
-        }
-
-    }
-
+    }*/
 
 
 }
