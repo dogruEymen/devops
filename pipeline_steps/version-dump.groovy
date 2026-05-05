@@ -69,6 +69,7 @@ node {
                 -w \${WORKSPACE} \\
                 ${builderImage} \\
                 sh -c "mvn versions:set -DnewVersion=${env.NEW_VERSION} && mvn versions:commit"
+            """
         )
 
     }
