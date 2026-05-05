@@ -10,8 +10,6 @@ properties([
 
 node {  
 
-    String workDirPath = "/var/lib/docker/volumes/jenkins_home/_data/workspace/$env.JOB_NAME"
-    println(workDirPath)
     // Build edilecek dosyalara ihtiyacım var
     // Build edilecek ortama ve tool'lara ihtiyacım var
     // Test için gerekli tool'lara ihtiyacım var
@@ -26,8 +24,6 @@ node {
     
     String BUILD_STAGE = "Build & Test Inside Docker"
     String TEST_STAGE = "Test"
-    String SONAR_CHECK = "Code Quality Check with SonarQube"
-    String QUALITY_GATE_CHECK_STAGE = "Quality Gate Check"
 
 
     stage('Checkout') {
