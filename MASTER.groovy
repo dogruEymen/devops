@@ -69,7 +69,16 @@ node {
             runDownstreamJob(SONARQUBE_JOB, parameters)
         }
     
+        stage(VERSION_STAGE) {
+            
+            def parameters = [
+                string(name: 'CODE_URL', value: projectCodeRepoUrl),
+                string(name: 'CREDENTIALS_ID', value: projectCredentialsId)
+            ]
 
+            runDownstreamJob(VERSION_JOB, parameters)
+        }
+        
     } catch(Exception e) {
 
         echo "Error occurred: ${e.message}"
