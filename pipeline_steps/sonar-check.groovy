@@ -28,7 +28,7 @@ node {
 
         checkout(scm: [
             $class: 'GitSCM',
-            branches: [name: '*/main'],
+            branches: [[name: '*/main']],
             userRemoteConfigs: [[ url: projectCodeRepoUrl, credentialsId: projectCredentialsId]]
         ])
 
