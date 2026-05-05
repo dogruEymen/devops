@@ -60,6 +60,7 @@ node {
     String projectCredentialsId = project['codeRepo']['credentialsId']
     String projectBuildImage = project['images']['builderImage']
     String projectRunnerImage = project['images']['runnerImage']
+    String repoSlug = project['codeRepo']['repoSlug']
 
     try {
 
@@ -103,7 +104,7 @@ node {
                 string(name: 'CODE_URL', value: projectCodeRepoUrl),
                 string(name: 'BRANCH_NAME', value: BRANCH_NAME),
                 string(name: 'CREDENTIALS_ID', value: projectCredentialsId),
-                string(name: 'REPO_SLUG', value: ),
+                string(name: 'REPO_SLUG', value:repoSlug),
                 string(name: 'BUILD_IMAGE', value: projectBuildImage),
                 string(name: 'RUNNER_IMAGE', value: projectRunnerImage),
                 string(name: 'PROJECT_NAME', value: projectName)

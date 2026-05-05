@@ -4,6 +4,7 @@ projects:
     codeRepo:
       url: "https://github.com/dogruEymen/java-project-1.git"
       credentialsId: "java-project-1-credentials"
+      repoSlug: "dogruEymen/java-project-1"
     images:
       builderImage: "maven:3.9-eclipse-temurin-17"
       runnerImage: "eclipse-temurin:17-jre-jammy"
