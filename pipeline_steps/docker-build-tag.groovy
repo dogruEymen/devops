@@ -89,7 +89,7 @@ String getProjectVersion() {
             -v jenkins_home:/var/jenkins_home \\
             -v maven_repo:/root/.m2 \\
             -w "\${WORKSPACE}" \\
-            "${builderImage}" \\
+            "${buildImage}" \\
             mvn help:evaluate -Dexpression=project.version -q -DforceStdout
         """, returnStdout: true).trim()
 
