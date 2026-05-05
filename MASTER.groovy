@@ -4,7 +4,7 @@ properties([
     ])
 ])
 
-import groovy.json.JsonSlurperClassic
+//import groovy.json.JsonSlurperClassic
 
 node {
 
@@ -27,7 +27,7 @@ node {
     String DOCKER_JOB = "docker-build-tag-job"
     String GHCR_PUSH_JOB = "ghcr-push-job"
 
-    stage("Resolve Github Event") {
+    /*stage("Resolve Github Event") {
         if(!params.GITHUB_PAYLOAD?.trim()) {
             error "GITHUB_PAYLOAD is empty. Github webhook payload couldn't get!"
         }
@@ -39,6 +39,7 @@ node {
         println(payload)
     
     }
+    */
     // Jenkins Parameters
     String PROJECT_ID = params.PROJECT_ID
     println("PROJECT_ID: $PROJECT_ID")
