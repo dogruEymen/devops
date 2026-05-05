@@ -26,7 +26,7 @@ node {
 
         sh '''
             docker run --rm \
-            -v "$PWD":\workspace \
+            -v "$PWD":/workspace \
             -v maven_repo:/root/.m2 \
             -w /workspace \
             maven:3.9.9-eclipse-temurin-17 \
