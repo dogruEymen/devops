@@ -34,9 +34,9 @@ node {
 
         sh '''
             docker run --rm \
-            -v "$PWD":/workspace \
+            -v jenkins_home:/var/jenkins_home \
             -v maven_repo:/root/.m2 \
-            -w /workspace \
+            -w "\$WORKSPACE" \
             maven:3.9.9-eclipse-temurin-17 \
             mvn clean package
         '''
