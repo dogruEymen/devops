@@ -78,7 +78,7 @@ node {
         
         withCredentials([
             usernamePassword(
-                credentialsId: ,
+                credentialsId: "$CREDENTIALS_ID",
                 usernameVariable: "GIT_USERNAME",
                 passwordVariable: "GIT_PASSWORD",
             )
