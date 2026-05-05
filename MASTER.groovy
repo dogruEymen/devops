@@ -73,12 +73,13 @@ node {
             
             def parameters = [
                 string(name: 'CODE_URL', value: projectCodeRepoUrl),
-                string(name: 'CREDENTIALS_ID', value: projectCredentialsId)
+                string(name: 'CREDENTIALS_ID', value: projectCredentialsId),
+                string(name: 'BUILDER_IMAGE', value: projectBuildImage)
             ]
 
             runDownstreamJob(VERSION_JOB, parameters)
         }
-        
+
     } catch(Exception e) {
 
         echo "Error occurred: ${e.message}"
