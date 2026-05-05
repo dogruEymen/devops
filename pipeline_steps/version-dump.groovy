@@ -68,7 +68,7 @@ node {
                 -v maven_repo:/root/.m2 \\
                 -w \${WORKSPACE} \\
                 ${builderImage} \\
-                mvn version:set -DnewVersion=${env.NEW_VERSION} \\
+                mvn versions:set -DnewVersion=${env.NEW_VERSION} \\
                 mvn versions:commit"""
         )
 
