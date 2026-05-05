@@ -24,14 +24,18 @@ node {
 
     stage(CURRENT_VER_STAGE) {
 
-        String currentVer = sh '''
-            mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-            returnStdout: true
-        '''.trim()
+        sh '''
+            docker run --rm \
+            -v "$PWD":\workspace \
+            -v maven_repo:/root/.m2 \
+            -w /workspace \
+            maven:3.9.9-eclipse-temurin-17 \
+            mvn clean package
+        '''
 
-        echo "Current Version: ${currentVer}"
+        //echo "Current Version: ${currentVer}"
 
-        env.CURRENT_VER = currentVer
+        //env.CURRENT_VER = currentVer
     }
 
 
