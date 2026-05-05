@@ -22,6 +22,14 @@ node {
 
     }
 
+    stage("Debug Workspace") {
+    sh """
+        pwd
+        ls -la
+        find . -maxdepth 3 -name pom.xml -print
+    """
+    }
+
     stage(CURRENT_VER_STAGE) {
 
         sh '''
