@@ -22,28 +22,22 @@ node {
 
     }
 
-    stage("Debug Workspace") {
-    sh """
-        pwd
-        ls -la
-        find . -maxdepth 3 -name pom.xml -print
-    """
-    }
 
     stage(CURRENT_VER_STAGE) {
 
-        sh '''
+        String currentVer = sh '''
             docker run --rm \
             -v jenkins_home:/var/jenkins_home \
             -v maven_repo:/root/.m2 \
             -w "\$WORKSPACE" \
-            maven:3.9.9-eclipse-temurin-17 \
-            mvn clean package
-        '''
+            "\$builderImage \
+            mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+            returnStdout: true
+        '''.trim()
 
-        //echo "Current Version: ${currentVer}"
+        echo "Current Version: ${currentVer}"
 
-        //env.CURRENT_VER = currentVer
+        env.CURRENT_VER = currentVer
     }
 
 
