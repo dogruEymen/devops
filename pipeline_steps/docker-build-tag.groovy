@@ -49,8 +49,8 @@ node {
         ).trim()
 
         env.SHORT_COMMIT = commitSHA.take(7)
-        env.VERSION_TAG = getProjectVersion()
-        env.IMAGE_NAME = "${registry}/${REPO_SLUG}/:${env.VERSION_TAG}-${shortCommit}".toLowerCase()
+        env.VERSION_TAG = getProjectVersion(buildImage)
+        env.IMAGE_NAME = "${registry}/${REPO_SLUG}:${env.VERSION_TAG}-${env.SHORT_COMMIT}".toLowerCase()
 
     }
 
@@ -81,7 +81,7 @@ node {
 }
 
 
-String getProjectVersion() {
+String getProjectVersion(String buildImage) {
 
     String currentVer = sh(
         script: 
