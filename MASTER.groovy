@@ -10,11 +10,20 @@ node {
     
     checkout scm
 
+    // Stages
     String BUILD_TEST_STAGE = "Build & Test"
     String SONARQUBE_STAGE = "SonarQube Check Stage"
     String VERSION_STAGE = "Version Bump"
     String DOCKER_STAGE = "Docker Build & Tag"
     String GHCR_PUSH_STAGE = "GHCR Push"
+
+    // Jobs
+    String BUILD_TEST_JOB = "build-test-job"
+    String SONARQUBE_JOB = "sonarqube-check-job"
+    String VERSION_JOB = "version-bump-job"
+    String DOCKER_JOB = "docker-build-tag-job"
+    String GHCR_PUSH_JOB = "ghcr-push-job"
+
 
     // Jenkins Parameters
     String PROJECT_ID = params.PROJECT_ID
@@ -39,17 +48,26 @@ node {
 
         stage(BUILD_TEST_STAGE) {
 
-            build job: 'maven-build-job', wait: true, propagate: true,
-            parameters: [
+            def parameters: [
                 string(name: 'CODE_URL', value: projectCodeRepoUrl),
                 string(name: 'CREDENTIALS_ID', value: projectCredentialsId),
                 string(name: 'PROJECT_NAME', value: projectName),
-                string(name: 'BUILDER_IMAGE', value: projectBuildImage),
-                string(name: 'RUNNER_IMAGE', value: projectRunnerImage)
+                string(name: 'BUILDER_IMAGE', value: projectBuildImage)
             ]
 
+            runDownstreamJob('maven-build-job', parameters)
         }
 
+        stage(SONARQUBE_STAGE) {
+
+            def parameters = [
+                string(name: 'CODE_URL', value: projectCodeRepoUrl),
+                string(name: 'CREDENTIALS_ID', value: projectCredentialsId),
+                string(name: 'PROJECT_NAME', value: projectName)
+            ]
+
+            runDownstreamJob(SONARQUBE_JOB, parameters)
+        }
     
 
     } catch(Exception e) {
@@ -57,5 +75,22 @@ node {
         echo "Error occurred: ${e.message}"
 
     }
+
+}
+
+void runDownstreamJob(String jobName, List parameters) {
+    
+    echo "Downstream job running: ${jobName}"
+
+    def jobBuildData = build(
+        job: jobName,
+        parameters: parameters,
+        wait: true,
+        propagate: true
+    )
+
+    echo "Job is completed: ${jobName}"
+    echo "Build number: ${jobBuildData.number}"
+    echo "Build result: ${jobBuildData.result}"
 
 }
