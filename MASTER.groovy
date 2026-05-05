@@ -4,11 +4,14 @@ properties([
     ])
 ])
 
+import groovy.json.JsonSlurperClassic
+
 node {
 
     currentBuild.getChangeSets().clear()
     
     checkout scm
+    
 
     // Stages
     String BUILD_TEST_STAGE = "Build & Test"
@@ -24,7 +27,18 @@ node {
     String DOCKER_JOB = "docker-build-tag-job"
     String GHCR_PUSH_JOB = "ghcr-push-job"
 
+    stage("Resolve Github Event") {
+        if(!params.GITHUB_PAYLOAD?.trim()) {
+            error "GITHUB_PAYLOAD is empty. Github webhook payload couldn't get!"
+        }
 
+        def payload = new JsonSlurperClassic().parseText(params.GITHUB_PAYLOAD)
+
+        env.APP_NAME = payload.repository.name
+        println("${env.APP_NAME}")
+        println(payload)
+    
+    }
     // Jenkins Parameters
     String PROJECT_ID = params.PROJECT_ID
     println("PROJECT_ID: $PROJECT_ID")
