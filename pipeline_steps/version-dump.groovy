@@ -25,15 +25,15 @@ node {
 
     stage(CURRENT_VER_STAGE) {
 
-        String currentVer = sh '''
-            docker run --rm \
+        String currentVer = sh(
+            script: 
+            '''docker run --rm \
             -v jenkins_home:/var/jenkins_home \
             -v maven_repo:/root/.m2 \
             -w "\$WORKSPACE" \
             "\$builderImage \
             mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-            returnStdout: true
-        '''.trim()
+        ''', returnStdout: true).trim()
 
         echo "Current Version: ${currentVer}"
 
