@@ -63,9 +63,9 @@ node {
             passwordVariable: "GITHUB_PASS"
         )]) {
             sh """
-                mkdir -p .m2
+    mkdir -p .m2
 
-                cat > .m2/settings.xml << EOF
+    cat > .m2/settings.xml << EOF
 
     <settings>
         <servers>
@@ -77,12 +77,14 @@ node {
         </servers>
     </settings>
     EOF
+    """
 
+        sh """
             docker run --rm \\
             -v "\${WORKSPACE}:/workspace" \\
             -v "\${WORKSPACE}/.m2/settings.xml:/root/.m2/settings.xml" \\
             -v maven_repo:/root/.m2/repository \\
-            -w workspace \\
+            -w /workspace \\
             "${buildImage}" \\
             mvn clean deploy -DskipTests
 
