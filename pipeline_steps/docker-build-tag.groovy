@@ -88,7 +88,7 @@ node {
             -v maven_repo:/root/.m2/repository \\
             -w "\${WORKSPACE}" \\
             "${buildImage}" \\
-            mvn clean deploy -DskipTests
+            mvn clean deploy -DskipTests -s /${WORKSPACE}/settings.xml
 
         """
         }
