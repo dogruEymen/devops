@@ -73,7 +73,7 @@ node {
                 string(name: 'BUILDER_IMAGE', value: projectBuildImage)
             ]
 
-            runDownstreamJob(BUILD_TEST_JOB, parameters)
+            //runDownstreamJob(BUILD_TEST_JOB, parameters)
         }
 
         stage(SONARQUBE_STAGE) {
@@ -84,7 +84,7 @@ node {
                 string(name: 'PROJECT_NAME', value: projectName)
             ]
 
-            runDownstreamJob(SONARQUBE_JOB, parameters)
+            //runDownstreamJob(SONARQUBE_JOB, parameters)
         }
     
         stage(VERSION_STAGE) {
@@ -95,7 +95,7 @@ node {
                 string(name: 'BUILDER_IMAGE', value: projectBuildImage)
             ]
 
-            runDownstreamJob(VERSION_JOB, parameters)
+            //runDownstreamJob(VERSION_JOB, parameters)
         }
 
         stage(DOCKER_STAGE) {
