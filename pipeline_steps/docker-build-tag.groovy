@@ -83,7 +83,7 @@ node {
             -v "\${WORKSPACE}/.m2/settings.xml:/root/.m2/settings.xml" \\
             -v maven_repo:/root/.m2/repository \\
             -w workspace \\
-            "${builderImage}" \\
+            "${buildImage}" \\
             mvn clean deploy -DskipTests
 
         """
