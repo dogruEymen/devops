@@ -84,11 +84,11 @@ node {
 
         sh """
             docker run --rm \\
-            -v "\${WORKSPACE}:/workspace" \\
+            -v jenkins_home:/var/jenkins_home
             -v maven_repo:/root/.m2/repository \\
-            -w /workspace \\
+            -w "\${WORKSPACE}" \\
             "${buildImage}" \\
-            mvn clean deploy -DskipTests -s /workspace/.m2/settings.xml
+            mvn clean deploy -DskipTests
 
         """
         }
