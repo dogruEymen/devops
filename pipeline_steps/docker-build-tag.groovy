@@ -1,7 +1,7 @@
 properties([
     parameters([
         string(name: 'CODE_URL', defaultValue: ''),
-        string(name: 'BRANCH_NAME', defaultValue: ''),
+        string(name: 'BRANCH_NAME', defaultValue: 'main'),
         string(name: 'CREDENTIALS_ID', defaultValue: ''),
         string(name: 'REPO_SLUG', defaultValue: ''),
         string(name: 'BUILD_IMAGE', defaultValue: ''),
@@ -24,8 +24,10 @@ node {
     String runnerImage = params.RUNNER_IMAGE
     String projectName = params.PROJECT_NAME
 
+    // Stages
     String BUILD_AND_PUSH_STAGE = "Build Docker Image & Push to the Repo"
     String IMAGE_TAG_STAGE = "Image Tag Stage"
+    String JAR_PUBLISH_STAGE = "Build & Publish JAR to GitHub Packages"
 
     stage('Checkout') {
 
@@ -54,6 +56,39 @@ node {
 
     }
 
+    stage(JAR_PUBLISH_STAGE) {
+        withCredentials([usernamePassword(
+            credentialsId: CREDENTIALS_ID,
+            usernameVariable: "GITHUB_USER",
+            passwordVariable: "GITHUB_PASS"
+        )]) {
+            sh """
+                mkdir -p .m2
+
+                cat > .m2/settings.xml << EOF
+
+    <settings>
+        <servers>
+            <server>
+                <id>github</id>
+                <username>${GITHUB_USER}</username>
+                <password>${GITHUB_PASS}</password>
+            </server>
+        </servers>
+    </settings>
+    EOF
+
+            docker run --rm \\
+            -v "\${WORKSPACE}:/workspace" \\
+            -v "\${WORKSPACE}/.m2/settings.xml:/root/.m2/settings.xml" \\
+            -v maven_repo:/root/.m2/repository \\
+            -w workspace \\
+            "${builderImage}" \\
+            mvn clean deploy -DskipTests
+
+        """
+        }
+    }
     stage(BUILD_AND_PUSH_STAGE) {
         sh """docker build --build-arg BASE_IMAGE=${buildImage} \
         --build-arg RUNNER_IMAGE=${runnerImage} \
