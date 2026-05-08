@@ -80,6 +80,8 @@ node {
     EOF
 
     file .m2/settings.xml
+    ls 
+    pwd
     """
 
         sh """
