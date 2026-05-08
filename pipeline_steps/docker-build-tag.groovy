@@ -86,7 +86,7 @@ node {
 
         sh """
             docker run --rm \\
-            -v "$WORKSPACE:/workspace" \\
+            -v jenkins_home/workspace/${env.JOB_NAME}:/workspace" \\
             -v maven_repo:/root/.m2/repository \\
             -w /workspace \\
             "${buildImage}" \\
