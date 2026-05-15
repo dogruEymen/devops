@@ -139,6 +139,7 @@ node {
             isAMerge = false
         }
     }
+    
     stage("Debug Webhook Variables") {
         echo "github_action = ${env.github_action}"
         echo "pr_merged = ${env.pr_merged}"

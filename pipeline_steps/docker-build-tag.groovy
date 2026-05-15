@@ -63,21 +63,23 @@ node {
             passwordVariable: "GITHUB_PASS"
         )]) {
             sh """
-    rm -rf .m2/settings.xml
-    mkdir -p .m2
+                rm -rf .m2/settings.xml
+                mkdir -p .m2
 
-    cat > .m2/settings.xml << EOF
+                cat > .m2/settings.xml <<EOF
 
-    <settings>
-        <servers>
-            <server>
-                <id>github</id>
-                <username>${GITHUB_USER}</username>
-                <password>${GITHUB_PASS}</password>
-            </server>
-        </servers>
-    </settings>
-    EOF
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <servers>
+        <server>
+            <id>github</id>
+            <username>${GITHUB_USER}</username>
+            <password>${GITHUB_PASS}</password>
+        </server>
+    </servers>
+</settings>
+EOF
 
     file .m2/settings.xml
     ls 
@@ -90,7 +92,7 @@ node {
             -v maven_repo:/root/.m2/repository \\
             -w /workspace \\
             "${buildImage}" \\
-            mvn clean deploy -DskipTests
+            mvn clean deploy -DskipTests /workspace/settings.xml
 
         """
         }
