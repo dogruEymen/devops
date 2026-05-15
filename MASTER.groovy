@@ -1,6 +1,5 @@
 properties([
     parameters([
-        string(name: 'PROJECT_ID', defaultValue: '', description: 'Lütfen projeyi seçiniz (YML dosyasındaki anahtar)'),
         string(name: 'BRANCH_NAME', defaultValue: 'main')
     ]),
     pipelineTriggers([
@@ -139,7 +138,7 @@ node {
     //}
 
     def project = projects[PROJECT_ID]
-    String projectName = project['name']
+    String projectName = env.repo_name
     String projectCodeRepoUrl = project['codeRepo']['url']
     String projectCredentialsId = project['codeRepo']['credentialsId']
     String projectBuildImage = project['images']['builderImage']
