@@ -2,6 +2,77 @@ properties([
     parameters([
         string(name: 'PROJECT_ID', defaultValue: '', description: 'Lütfen projeyi seçiniz (YML dosyasındaki anahtar)'),
         string(name: 'BRANCH_NAME', defaultValue: 'main')
+    ]),
+    pipelineTriggers([
+        [$class: 'GenericTrigger',
+            
+            genericVariables: [
+                [
+                    key: 'github_action',
+                    value: '$.action',
+                    expressionType: 'JSONPath',
+                    defaultValue: ''
+                ],
+                [
+                    key: 'pr_merged',
+                    value: '$.pull_request.merged',
+                    expressionType: 'JSONPath',
+                    defaultValue: ''
+                ],
+                [
+                    key: 'pr_number',
+                    value: '.$pull_request.number',
+                    expressionType: 'JSONPath',
+                    defaultValue: ''
+                ],
+                [
+                    key: 'commit_sha',
+                    value: '$.pull_request.head.sha',
+                    expressionType: 'JSONPath',
+                    defaultValue: ''
+                ],
+                [
+                    key: 'repo_name',
+                    value: '$.repository.name',
+                    expressionType: 'JSONPath',
+                    defaultValue: ''
+                ],
+                [
+                    key: 'repo_full_name',
+                    value: '$.repository.full_name',
+                    expressionType: 'JSONPath',
+                    defaultValue: ''
+                ],
+                [
+                    key: 'push_ref',
+                    value: '$.ref',
+                    expressionType: 'JSONPath',
+                    defaultValue: ''
+                ],
+                [
+                    key: 'push_after',
+                    value: '$.after',
+                    expressionType: 'JSONPath',
+                    defaultValue: ''
+                ]
+            ],
+            
+            genericHeaderVariables: [
+                [
+                    key: 'X-GitHub-Event',
+                    regexpFilter: ''
+                ]
+            ],
+            
+            token: 'master-generic-webhook-token',
+            
+            causeString: 'Triggered by GitHub event',
+            
+            printContributedVariables: true,
+            printPostContend: true,
+            
+            silentResponse: false
+        ]
     ])
 ])
 
@@ -9,6 +80,19 @@ properties([
 
 node {
 
+    stage("Debug Webhook Variables") {
+        echo "github_action = ${env.github_action}"
+        echo "pr_merged = ${env.pr_merged}"
+        echo "pr_number = ${env.pr_number}"
+        echo "commit_sha = ${env.commit_sha}"
+        echo "repo_url = ${env.repo_url}"
+        echo "repo_name = ${env.repo_name}"
+        echo "repo_full_name = ${env.repo_full_name}"
+        echo "push_ref = ${env.push_ref}"
+        echo "push_after = ${env.push_after}"
+        echo "x_github_event = ${env.x_github_event}"
+    }
+    
     currentBuild.getChangeSets().clear()
     
     checkout scm
