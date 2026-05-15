@@ -1,4 +1,6 @@
 properties([
+    disableConcurrentBuilds(),
+
     parameters([
         string(name: 'BRANCH_NAME', defaultValue: 'main')
     ]),
@@ -116,6 +118,10 @@ node {
             currentBuild.result = 'NOT_BUILD'
         }
 
+    }
+
+    if(skipPipeline) {
+        return
     }
 
     stage("Debug Webhook Variables") {
