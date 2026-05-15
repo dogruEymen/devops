@@ -62,12 +62,11 @@ node {
             usernameVariable: "GITHUB_USER",
             passwordVariable: "GITHUB_PASS"
         )]) {
-            sh """
-                rm -rf .m2/settings.xml
-                mkdir -p .m2
+            sh '''
+            rm -rf .m2
+            mkdir -p .m2
 
-                cat > .m2/settings.xml <<EOF
-
+            cat > .m2/settings.xml <<EOF
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
@@ -81,20 +80,17 @@ node {
 </settings>
 EOF
 
-    file .m2/settings.xml
-    ls 
-    pwd
-    """
+            ls -la .m2
+            test -f .m2/settings.xml
 
-        sh """
-            docker run --rm \\
-            -v jenkins_home/workspace/${env.JOB_NAME}:/workspace" \\
-            -v maven_repo:/root/.m2/repository \\
-            -w /workspace \\
-            "${buildImage}" \\
-            mvn clean deploy -DskipTests /workspace/settings.xml
-
-        """
+            docker run --rm \
+              -v "$WORKSPACE":/workspace \
+              -v "$WORKSPACE/.m2/settings.xml":/root/.m2/settings.xml \
+              -v maven_repo:/root/.m2/repository \
+              -w /workspace \
+              maven:3.9-eclipse-temurin-17 \
+              mvn clean deploy -DskipTests -s /root/.m2/settings.xml
+        '''
         }
     }
     stage(BUILD_AND_PUSH_STAGE) {
