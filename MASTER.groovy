@@ -115,6 +115,10 @@ node {
         // Check if commit triggered by Jenkins?
         skipPipeline = shouldSkipBuild(commitMessage, pusherName, senderLogin)
 
+        if(env.github_action == "closed" && env.pr_merged == false){
+            echo "Job is stopping because PR is closed."
+            skipPipeline = true
+        }
         if(skipPipeline) {
             echo "Job is stopping because it's triggered by Jenkins/version bump"
             currentBuild.result = 'NOT_BUILD'
@@ -239,7 +243,7 @@ node {
 
                 runDownstreamJob(VERSION_JOB, parameters)
             }
-            
+
             stage(DOCKER_STAGE) {
 
                 def parameters = [
