@@ -53,6 +53,24 @@ properties([
                     value: '$.after',
                     expressionType: 'JSONPath',
                     defaultValue: ''
+                ],
+                [
+                    key: 'webhook_commit_message',
+                    value: '$.head_commit.message',
+                    expressionType: 'JSONPath',
+                    defaultValue: ''
+                ],
+                [
+                    key: 'webhook_pusher_name',
+                    value: '$.pusher.name',
+                    expressionType: 'JSONPath',
+                    defaultValue: ''
+                ],
+                [
+                    key: 'webhook_sender_login',
+                    value: '$.sender.login',
+                    expressionType: 'JSONPath',
+                    defaultValue: ''
                 ]
             ],
             
@@ -77,7 +95,28 @@ properties([
 
 //import groovy.json.JsonSlurperClassic
 
+boolean skipPipeline = false
+
 node {
+
+    stage("Jenkins Infinite Loop Check") {
+        
+        String commitMessage = env.webhook_commit_message ?: ''
+        String pusherName = env.webhook_pusher_name ?: ''
+        String senderLogin = env.webhook_sender_login ?: ''
+
+        echo "Commit Message: ${commitMessage}"
+        echo "Pusher Name: ${pusherName}"
+        echo "Sender Login: ${senderLogin}"
+
+        skipPipeline = shouldSkipBuild(commitMessage, pusherName, senderLogin)
+
+        if(skipPipeline) {
+            echo "Job is stopping because it's triggered by Jenkins/version bump"
+            currentBuild.result = 'NOT_BUILD'
+        }
+
+    }
 
     stage("Debug Webhook Variables") {
         echo "github_action = ${env.github_action}"
@@ -219,4 +258,21 @@ void runDownstreamJob(String jobName, List parameters) {
     echo "Build number: ${jobBuildData.number}"
     echo "Build result: ${jobBuildData.result}"
 
+}
+
+boolean shouldSkipBuild(String commitMessage, String pusherName, String senderLogin) {
+
+    String msg = commitMessage ?: ''
+    String pusher = pusherName ?: ''
+    String sender = senderLogin ?: ''
+
+    if (msg.contains('[jenkins skip]') || msg.contains('[skip ci]')) {
+        return true
+    }
+    
+    if (pusher == 'jenkins') {
+        return true
+    }
+
+    return false
 }
