@@ -1,22 +1,19 @@
 projects:
-  JAVA1:
-    name: "java-project-1"
-    codeRepo:
+  java-project-1:
+    codeRepo: 
       url: "https://github.com/dogruEymen/java-project-1.git"
       credentialsId: "java-project-1-credentials"
       repoSlug: "dogruEymen/java-project-1"
     images:
       builderImage: "maven:3.9-eclipse-temurin-17"
       runnerImage: "eclipse-temurin:17-jre-jammy"
-  JAVA2:
-    name: "java-project-2"
+  java-project-2:
     codeRepo:
       url: "https://github.com/dogruEymen/java-project-2.git"
     images:
       builderImage: "maven:3.9-eclipse-temurin-17"
       runnerImage: "eclipse-temurin:17-jre-jammy"
-  JAVA3:
-    name: "java-project-3"
+  java-project-3:
     codeRepo:
       url: "https://github.com/dogruEymen/java-project-3.git"
     images:
