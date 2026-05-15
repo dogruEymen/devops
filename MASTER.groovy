@@ -92,7 +92,7 @@ node {
         echo "push_after = ${env.push_after}"
         echo "x_github_event = ${env.x_github_event}"
     }
-    
+
     currentBuild.getChangeSets().clear()
     
     checkout scm
@@ -125,7 +125,7 @@ node {
     }
     */
     // Jenkins Parameters
-    String PROJECT_ID = params.PROJECT_ID
+    String PROJECT_ID = env.repo_name
     println("PROJECT_ID: $PROJECT_ID")
     String BRANCH_NAME = params.BRANCH_NAME
     println("BRANCH_NAME: $BRANCH_NAME")
