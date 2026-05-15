@@ -98,10 +98,11 @@ properties([
 //import groovy.json.JsonSlurperClassic
 
 boolean skipPipeline = false
+boolean isAMerge = false
 
 node {
 
-    stage("Jenkins Infinite Loop Check") {
+    stage("Pre-Check for Pipeline") {
         
         String commitMessage = env.webhook_commit_message ?: ''
         String pusherName = env.webhook_pusher_name ?: ''
@@ -111,6 +112,7 @@ node {
         echo "Pusher Name: ${pusherName}"
         echo "Sender Login: ${senderLogin}"
 
+        // Check if commit triggered by Jenkins?
         skipPipeline = shouldSkipBuild(commitMessage, pusherName, senderLogin)
 
         if(skipPipeline) {
@@ -124,6 +126,15 @@ node {
         return
     }
 
+    stage("Check for Merge") {
+        
+        if(env.github_action == "closed" && env.pr_merged == true){
+            isAMerge = true
+        }
+        if(env.github_action == "opened" && env.pr_merged == false){
+            isAMerge = false
+        }
+    }
     stage("Debug Webhook Variables") {
         echo "github_action = ${env.github_action}"
         echo "pr_merged = ${env.pr_merged}"
@@ -226,20 +237,24 @@ node {
             runDownstreamJob(VERSION_JOB, parameters)
         }
 
-        stage(DOCKER_STAGE) {
+        if (isAMerge) {
 
-            def parameters = [
-                string(name: 'CODE_URL', value: projectCodeRepoUrl),
-                string(name: 'BRANCH_NAME', value: BRANCH_NAME),
-                string(name: 'CREDENTIALS_ID', value: projectCredentialsId),
-                string(name: 'REPO_SLUG', value:repoSlug),
-                string(name: 'BUILD_IMAGE', value: projectBuildImage),
-                string(name: 'RUNNER_IMAGE', value: projectRunnerImage),
-                string(name: 'PROJECT_NAME', value: projectName)
-            ]
+            stage(DOCKER_STAGE) {
 
-            runDownstreamJob(DOCKER_BUILD_PUSH_JOB, parameters)
+                def parameters = [
+                    string(name: 'CODE_URL', value: projectCodeRepoUrl),
+                    string(name: 'BRANCH_NAME', value: BRANCH_NAME),
+                    string(name: 'CREDENTIALS_ID', value: projectCredentialsId),
+                    string(name: 'REPO_SLUG', value:repoSlug),
+                    string(name: 'BUILD_IMAGE', value: projectBuildImage),
+                    string(name: 'RUNNER_IMAGE', value: projectRunnerImage),
+                    string(name: 'PROJECT_NAME', value: projectName)
+                ]
+
+                runDownstreamJob(DOCKER_BUILD_PUSH_JOB, parameters)
+            }
         }
+        
 
     } catch(Exception e) {
 
