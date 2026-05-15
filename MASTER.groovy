@@ -226,19 +226,20 @@ node {
             runDownstreamJob(SONARQUBE_JOB, parameters)
         }
     
-        stage(VERSION_STAGE) {
-            
-            def parameters = [
-                string(name: 'CODE_URL', value: projectCodeRepoUrl),
-                string(name: 'CREDENTIALS_ID', value: projectCredentialsId),
-                string(name: 'BUILDER_IMAGE', value: projectBuildImage)
-            ]
-
-            runDownstreamJob(VERSION_JOB, parameters)
-        }
 
         if (isAMerge) {
 
+            stage(VERSION_STAGE) {
+            
+                def parameters = [
+                    string(name: 'CODE_URL', value: projectCodeRepoUrl),
+                    string(name: 'CREDENTIALS_ID', value: projectCredentialsId),
+                    string(name: 'BUILDER_IMAGE', value: projectBuildImage)
+                ]
+
+                runDownstreamJob(VERSION_JOB, parameters)
+            }
+            
             stage(DOCKER_STAGE) {
 
                 def parameters = [
