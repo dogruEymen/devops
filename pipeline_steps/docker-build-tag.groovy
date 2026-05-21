@@ -56,7 +56,7 @@ node {
 
     }
 
-    stage(JAR_PUBLISH_STAGE) {
+    /*stage(JAR_PUBLISH_STAGE) {
         withCredentials([usernamePassword(
             credentialsId: CREDENTIALS_ID,
             usernameVariable: "GITHUB_USER",
@@ -120,7 +120,7 @@ docker run --rm \
             sh "docker push ${env.IMAGE_NAME}"
         }
     }
-
+    */
     
 }
 
