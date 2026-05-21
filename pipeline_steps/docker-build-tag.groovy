@@ -96,6 +96,7 @@ docker run --rm \
 """
         }
     }
+    */
     stage(BUILD_AND_PUSH_STAGE) {
         sh """docker build --build-arg BASE_IMAGE=${buildImage} \
         --build-arg RUNNER_IMAGE=${runnerImage} \
@@ -120,7 +121,7 @@ docker run --rm \
             sh "docker push ${env.IMAGE_NAME}"
         }
     }
-    */
+    
     
 }
 
