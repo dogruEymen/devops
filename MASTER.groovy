@@ -132,6 +132,9 @@ node {
 
     stage("Check for Merge") {
         
+        if(env.github_action == null && env.pr_merged == null &&  env.x_github_event == "push"){
+            isAMerge = true
+        }
         if(env.github_action == "closed" && env.pr_merged == true){
             isAMerge = true
         }
