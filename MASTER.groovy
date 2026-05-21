@@ -223,7 +223,7 @@ node {
             runDownstreamJob(BUILD_TEST_JOB, parameters)
         }
 
-        /*stage(SONARQUBE_STAGE) {
+        stage(SONARQUBE_STAGE) {
 
             def parameters = [
                 string(name: 'CODE_URL', value: projectCodeRepoUrl),
@@ -232,7 +232,7 @@ node {
             ]
 
             runDownstreamJob(SONARQUBE_JOB, parameters)
-        }*/
+        }
     
 
         if (isAMerge) {
