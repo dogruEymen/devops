@@ -109,7 +109,7 @@ docker run --rm \
         sh "docker run -d -p 4040:4040 --name ${projectName}-${env.VERSION_TAG} ${env.IMAGE_NAME}"
 
         withCredentials([usernamePassword(
-            credentialsId: 'github-webhook',
+            credentialsId: 'github-access-token',
             usernameVariable: "GHCR_USER",
             passwordVariable: "GHCR_PASS"
         )]) {
