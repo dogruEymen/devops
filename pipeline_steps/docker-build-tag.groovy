@@ -96,6 +96,7 @@ EOF
     stage(BUILD_AND_PUSH_STAGE) {
         sh """docker build --build-arg BASE_IMAGE=${buildImage} \
         --build-arg RUNNER_IMAGE=${runnerImage} \
+        --build-arg IMAGE_NAME=${env.IMAGE_NAME} \
         -t ${env.IMAGE_NAME} ."""
 
         echo "Container starting..."
