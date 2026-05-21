@@ -96,11 +96,12 @@ EOF
     stage(BUILD_AND_PUSH_STAGE) {
         sh """docker build --build-arg BASE_IMAGE=${buildImage} \
         --build-arg RUNNER_IMAGE=${runnerImage} \
-        --build-arg IMAGE_NAME=${env.IMAGE_NAME} \
         -t ${env.IMAGE_NAME} ."""
 
         echo "Container starting..."
+        echo "Container: ${env.IMAGE_NAME}"
         sh "docker rm -f ${projectName}-${env.VERSION_TAG} || true"
+        echo "Test Run is Starting..."
         sh "docker run -d -p 4040:4040 --name ${projectName}-${env.VERSION_TAG} ${env.IMAGE_NAME}"
 
         withCredentials([usernamePassword(
