@@ -22,7 +22,7 @@ properties([
                 ],
                 [
                     key: 'pr_number',
-                    value: '.$pull_request.number',
+                    value: '$.pull_request.number',
                     expressionType: 'JSONPath',
                     defaultValue: ''
                 ],
